@@ -18,7 +18,7 @@
                         @change="pullLists(false)"
                         v-model="dataTime"
                         format="YYYY-MM-DD"
-                        type="data"
+                        type="date"
                         placeholder="é€‰æ‹©æ—¥æœŸ">
                     </el-date-picker>
                     <el-button v-if="schema==='1'" @click="mode=!mode" :size="size" class="iconfont icon-zhuanhuan">
@@ -149,15 +149,18 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
             };
         },
         pageLists() {
-            let rangeTime = this.formatTime(this.fileLists[this.index - 1], [])
-            return reduce(this.lists, (result: ListInfo, v, k): ListInfo => {
-                k >= rangeTime[0] && k <= rangeTime[1] && (result[k] = v)
-                return result
-            }, {})
+            if(this.fileLists.length){
+                let rangeTime = this.formatTime(this.fileLists[this.index - 1], [])
+                return reduce(this.lists, (result: ListInfo, v, k): ListInfo => {
+                    k >= rangeTime[0] && k <= rangeTime[1] && (result[k] = v)
+                    return result
+                }, {})
+            }else {
+                return this.lists
+            }
         },
         fileLists(){
             //@ts-ignore
-            console.log(cloneDeep((<any>this).$store.state.app.fileLists).reverse())
             return cloneDeep((<any>this).$store.state.app.fileLists).reverse()
         },
         ...mapState([
@@ -173,8 +176,10 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
     },
     methods: {
         changePage(v: number) {
-            this.getLists(this.fileLists[v - 1])
-            this.dataTime = this.formatTime(this.fileLists[v - 1], 'startTime')
+            if(this.fileLists.length){
+                this.getLists(this.fileLists[v - 1])
+                this.dataTime = this.formatTime(this.fileLists[v - 1], 'startTime')
+            }
         },
         formatTime(v: string, type: any) {
             if (/_/.test(v)) {
@@ -258,7 +263,9 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
                 if(!this.fileLists.length){
                     await this.getPage()
                 }
-                this.index = this.fileLists.findIndex((i: string) => i === t) + 1
+                console.log(t,this.fileLists,'this.fileLists')
+                let findIndex=this.fileLists.findIndex((i: string) => i === t)
+                this.index = findIndex>-1?findIndex + 1:1
             }
             this.hash && axios.get(`${this.baseUrl}/tools?dir=english&c=english&t=${t}&k=${this.hash}`)
                 .then((response: any) => {
