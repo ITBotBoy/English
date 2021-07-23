@@ -1,0 +1,37 @@
+{
+    "name": "English",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "vue-cli-service serve",
+        "build": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
+    },
+    "dependencies": {
+        "babel-plugin-lodash": "^3.3.4",
+        "core-js": "^3.13.0",
+        "element-plus": "^1.0.2-beta.44",
+        "loadsh": "^0.0.4",
+        "lodash-webpack-plugin": "^0.11.6",
+        "tslib": "^2.3.0",
+        "vue": "^3.0.0",
+        "vue-class-component": "^8.0.0-0",
+        "vue-loader-v16": "^16.0.0-beta.5.4",
+        "vue-router": "^4.0.0-0",
+        "vuedraggable": "^4.0.1",
+        "vuex": "^4.0.0-0"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-babel": "~4.5.0",
+        "@vue/cli-plugin-router": "~4.5.0",
+        "@vue/cli-plugin-typescript": "~4.5.0",
+        "@vue/cli-plugin-vuex": "~4.5.0",
+        "@vue/cli-service": "~4.5.0",
+        "@vue/compiler-sfc": "^3.0.0",
+        "node-sass": "^4.12.0",
+        "sass-loader": "^8.0.2",
+        "typescript": "~4.1.5",
+        "vuex-module-decorators": "^1.0.1",
+        "vuex-persistedstate": "^4.0.0-beta.3"
+    }
+}
