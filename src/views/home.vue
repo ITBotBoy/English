@@ -86,7 +86,7 @@
                 v-model:currentPage="index"
                 :total="fileLists.length">
                 <template #default>
-                    <p style="color: #ccc;font-size: 12px;">{{formatTime(fileLists.reverse()[index-1])}}</p>
+                    <p style="color: #ccc;font-size: 12px;">{{formatTime(fileLists[index-1])}}</p>
                 </template>
             </el-pagination>
         </el-scrollbar>
@@ -143,14 +143,18 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
             };
         },
         pageLists(){
-            let rangeTime=this.formatTime(this.fileLists.reverse()[this.index-1],[])
+            let rangeTime=this.formatTime(this.fileLists[this.index-1],[])
             return reduce(this.lists,(result:ListInfo, v, k):ListInfo=>{
                 k>=rangeTime[0] && k<=rangeTime[1] && (result[k]=v)
                 return result
             },{})
         },
+        ...mapState({
+            // @ts-ignore
+            fileLists: state => state.app.fileLists.reverse()
+        }),
         ...mapState([
-            'fileLists',
+
             'cloudInfo',
             'account',
             'lists'
@@ -163,8 +167,8 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
     },
     methods: {
         changePage(v:number){
-            this.getLists(this.fileLists.reverse()[v-1])
-            this.dataTime=this.formatTime(this.fileLists.reverse()[v-1],'startTime')
+            this.getLists(this.fileLists[v-1])
+            this.dataTime=this.formatTime(this.fileLists[v-1],'startTime')
         },
         formatTime(v:string,type:any){
             if(/_/.test(v)){
@@ -245,7 +249,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
             let currentTime = moment().format('YYYY-MM-DD')
             let t=week || `${new Date().getFullYear()}_${moment(this.dataTime || currentTime).week()}`
             if(!week){
-                this.index=this.fileLists.reverse().findIndex((i:string)=>i===t)+1
+                this.index=this.fileLists.findIndex((i:string)=>i===t)+1
             }
             this.hash && axios.get(`${this.baseUrl}/tools?dir=english&c=english&t=${t}&k=${this.hash}`)
                 .then((response:any)=> {
