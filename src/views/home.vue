@@ -308,6 +308,11 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
             });
         },
         postData(data: object, t: string, msg?: string) {
+            let rangeTime = this.formatTime(t, [])
+            data = reduce(data, (result: ListInfo, v, k): ListInfo => {
+                k >= rangeTime[0] && k <= rangeTime[1] && (result[k] = v)
+                return result
+            }, {})
             this.hash && axios.post(`${this.baseUrl}/tools/update`, {
                 t,
                 dir: 'english',
