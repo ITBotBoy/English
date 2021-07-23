@@ -228,9 +228,9 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
                 })
             }
         },
-        getPage() {
+        async getPage() {
             //本地
-            this.hash && axios.get(`${this.baseUrl}/tools/index?dir=english&c=english&k=${this.hash}`)
+            await this.hash && axios.get(`${this.baseUrl}/tools/index?dir=english&c=english&k=${this.hash}`)
                 .then((response: any) => {
                     //更新
                     let needPost = difference(this.fileLists, response.data.data)
