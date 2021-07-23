@@ -98,10 +98,12 @@
 <script lang="ts">
 import Draggable from 'vuedraggable'
 import clone from 'lodash/clone'
+import cloneDeep from 'lodash/cloneDeep'
 import difference from 'lodash/difference'
 
 import reduce from 'lodash/reduce'
 import concat from 'lodash/concat'
+
 
 const schemaList = [
     {k: '3', v: '预览模式'},
@@ -155,7 +157,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
         },
         fileLists(){
             //@ts-ignore
-            return (<any>this).$store.state.app.fileLists.reverse()
+            return cloneDeep((<any>this).$store.state.app.fileLists).reverse()
         },
         ...mapState([
             'cloudInfo',
