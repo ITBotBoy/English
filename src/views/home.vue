@@ -88,7 +88,7 @@
                 v-model:currentPage="index"
                 :total="fileLists.length">
                 <template #default>
-                    <p style="color: #ccc;font-size: 12px;">{{formatTime(fileLists[index - 1])}}</p>
+                    <p v-if="fileLists.length" style="color: #ccc;font-size: 12px;">{{formatTime(fileLists[index - 1])}}</p>
                 </template>
             </el-pagination>
         </el-scrollbar>
@@ -157,6 +157,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
         },
         fileLists(){
             //@ts-ignore
+            console.log(cloneDeep((<any>this).$store.state.app.fileLists).reverse())
             return cloneDeep((<any>this).$store.state.app.fileLists).reverse()
         },
         ...mapState([
@@ -250,10 +251,13 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// é
                     });
                 })
         },
-        getLists(week: string) {
+        async getLists(week: string) {
             let currentTime = moment().format('YYYY-MM-DD')
             let t = week || `${new Date().getFullYear()}_${moment(this.dataTime || currentTime).week()}`
             if (!week) {
+                if(!this.fileLists.length){
+                    await this.getPage()
+                }
                 this.index = this.fileLists.findIndex((i: string) => i === t) + 1
             }
             this.hash && axios.get(`${this.baseUrl}/tools?dir=english&c=english&t=${t}&k=${this.hash}`)
