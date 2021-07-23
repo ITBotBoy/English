@@ -27,7 +27,7 @@ import {Options, Vue} from 'vue-class-component';
         'list':Object,'mode':Boolean,'schema':String,'type':Boolean
     },
     data() {
-
+        return {}
     },
     methods:{
         confirm(){
