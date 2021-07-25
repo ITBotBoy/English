@@ -32,12 +32,11 @@ export default class Lists extends VuexModule {
             this.lists=Object.assign(this.lists,v)
             return
         }
-        let weekTime=`${new Date().getFullYear()}_${moment(k).week()}`
+        let weekTime=`${new Date().getFullYear()}_${moment(k).week()}`;
+        !this.fileLists.includes(weekTime) && this.fileLists.push(weekTime);
         if(this.lists[k]){
-            !this.fileLists.includes(weekTime) && this.fileLists.push(weekTime)
             this.lists=Object.assign(this.lists,{[k]:v})
         }else {
-            !this.fileLists.includes(weekTime) && this.fileLists.unshift(weekTime)
             this.lists=Object.assign({[k]:v},this.lists)
         }
     }
