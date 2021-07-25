@@ -88,7 +88,7 @@
                 v-model:currentPage="index"
                 :total="fileLists.length">
                 <template #default>
-                    <p v-if="fileLists.length" style="color: #ccc;font-size: 12px;">{{formatTime(fileLists[index - 1])}}</p>
+                    <p v-if="fileLists.length" style="color: #ccc;font-size: 12px;">{{formatTime(index>=1?fileLists[index - 1]:currentWeek)}}</p>
                 </template>
             </el-pagination>
         </el-scrollbar>
@@ -130,6 +130,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
             type: false,
             // 在 #app 标签下渲染一个按钮组件//172.24.29.21:5200 /coin/api
             dataTime: '',
+            currentWeek: '',
             hash: '',
             isSmall: false,
             currentTime: '',
@@ -149,7 +150,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
             };
         },
         pageLists() {
-            if(this.fileLists.length){
+            if(this.fileLists.length && this.index>=1){
                 let rangeTime = this.formatTime(this.fileLists[this.index - 1], [])
                 return reduce(this.lists, (result: ListInfo, v, k): ListInfo => {
                     k >= rangeTime[0] && k <= rangeTime[1] && (result[k] = v)
@@ -230,7 +231,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
         },
         async getPage() {
             //本地
-            await this.hash && axios.get(`${this.baseUrl}/tools/index?dir=english&c=english&k=${this.hash}`)
+            this.hash && await axios.get(`${this.baseUrl}/tools/index?dir=english&c=english&k=${this.hash}`)
                 .then((response: any) => {
                     //更新
                     let needPost = difference(this.fileLists, response.data.data)
@@ -238,6 +239,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
                     if (needUpdate.length) {
                         this.updatePage(response.data.data)
                     }
+
                     if (needPost.length === 2) {
                         //每周自动检测更新,不能把原来的更新掉，本周更新上周的数据
                         let t = needPost[0]
@@ -260,12 +262,15 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
             let currentTime = moment().format('YYYY-MM-DD')
             let t = week || `${new Date().getFullYear()}_${moment(this.dataTime || currentTime).week()}`
             if (!week) {
+                //分页更新问题
                 if(!this.fileLists.length){
                     await this.getPage()
                 }
-                console.log(t,this.fileLists,'this.fileLists')
-                let findIndex=this.fileLists.findIndex((i: string) => i === t)
-                this.index = findIndex>-1?findIndex + 1:1
+                // console.log(t,this.fileLists,'this.fileLists')
+                let findIndex =this.fileLists.findIndex((i: string) => i === t)
+                // console.log(this.index)
+                // this.index = findIndex>-1?findIndex + 1:1
+                this.index = findIndex +1
             }
             this.hash && axios.get(`${this.baseUrl}/tools?dir=english&c=english&t=${t}&k=${this.hash}`)
                 .then((response: any) => {
@@ -380,6 +385,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
         this.getPage()
         this.currentTime = moment().format('YYYY-MM-DD')
         this.dataTime = this.currentTime
+        this.currentWeek = `${new Date().getFullYear()}_${moment(this.dataTime).week()}`
         this.itemList[this.currentTime] = this.lists[this.currentTime] || []
     }
 })
