@@ -1,5 +1,16 @@
 import {VuexModule, Module, Mutation, Action} from 'vuex-module-decorators';
 import {CloudInfo,ListInfo,ItemInfo} from '@/types/config'
+// @ts-ignore
+function sortObject(obj) {
+    // @ts-ignore
+    return Object.keys(obj)
+        .sort((a,b)=>b.localeCompare(a))
+        .reduce((o, v) => {
+            // @ts-ignore
+            o[v] = obj[v];
+            return o;
+        }, {});
+}
 @Module({
     name: 'app',
     namespaced: true
@@ -34,10 +45,12 @@ export default class Lists extends VuexModule {
         }
         let weekTime=`${new Date().getFullYear()}_${moment(k).week()}`;
         !this.fileLists.includes(weekTime) && this.fileLists.push(weekTime);
+        // let lists:ListInfo=sortObject(this.lists);
+        let lists:ListInfo=this.lists;
         if(this.lists[k]){
-            this.lists=Object.assign(this.lists,{[k]:v})
+            this.lists=Object.assign(lists,{[k]:v})
         }else {
-            this.lists=Object.assign({[k]:v},this.lists)
+            this.lists=Object.assign({[k]:v},lists)
         }
     }
     

@@ -150,15 +150,17 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
             };
         },
         pageLists() {
+            let lists;
             if(this.fileLists.length && this.index>=1){
                 let rangeTime = this.formatTime(this.fileLists[this.index - 1], [])
-                return reduce(this.lists, (result: ListInfo, v, k): ListInfo => {
+                lists=reduce(this.lists, (result: ListInfo, v, k): ListInfo => {
                     k >= rangeTime[0] && k <= rangeTime[1] && (result[k] = v)
                     return result
                 }, {})
             }else {
-                return this.lists
+                lists=this.lists
             }
+            return this.sortObject(lists)
         },
         fileLists(){
             //@ts-ignore
@@ -176,6 +178,15 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
         Draggable
     },
     methods: {
+        sortObject(obj:{}) {
+            return Object.keys(obj)
+            .sort((a,b)=>b.localeCompare(a))
+            .reduce((o, v) => {
+                // @ts-ignore
+                o[v] = obj[v];
+                return o;
+            }, {});
+        },
         changePage(v: number) {
             if(this.fileLists.length){
                 this.getLists(this.fileLists[v - 1])
@@ -249,7 +260,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
                             return result
                         }, {})
                         //更新此次数据
-                        this.postData(lists, t, '数据自动上传更新完成')
+                        this.postData(this.sortObject(lists), t, '数据自动上传更新完成')
                     }
                 }).catch((err: any) => {
                     this.$message.error({
@@ -355,7 +366,7 @@ const {mapState, mapActions, mapMutations} = createNamespacedHelpers('app');// �
                 if (!this.hash) {
                     return this.$message.error('请联系管理员获取登录账号！')
                 }
-                this.postData(this.lists, t)
+                this.postData(this.sortObject(this.lists), t)
             }).catch(() => {
             });
         },
