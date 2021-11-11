@@ -84,7 +84,7 @@
                 :small="isSmall"
                 @current-change="changePage"
                 :page-size="1"
-                layout="prev, pager,next,slot"
+                layout="prev,pager,next,slot"
                 v-model:currentPage="index"
                 :total="fileLists.length">
                 <template #default>
@@ -406,10 +406,8 @@ export default class Home extends Vue {
 
 <style scoped lang="scss">
 ::v-deep .el-scrollbar__view {
-    position:relative;
     min-height:100%;
     box-sizing:border-box;
-    padding-bottom:100px;
     .el-pagination {
         position:absolute;
         bottom:0;
@@ -462,6 +460,7 @@ export default class Home extends Vue {
     }
     &__wrap {
         overflow-x:hidden;
+        height:calc(100% - 80px)
     }
 }
 ::v-deep .el-card {
