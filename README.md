@@ -4,6 +4,6 @@
 
 项目基于vue3、typescript，用vue全家桶搭建，欢迎Star
 
-可以通过访问 http://tools.renserve.com/english 预览。
+可以通过访问预览。
 
 ![](public/1.jpg)
